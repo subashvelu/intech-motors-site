@@ -1,0 +1,42 @@
+name: Deploy website to AWS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # needed for OIDC login to AWS (no access keys stored!)
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check HTML
+        run: npx --yes htmlhint index.html
+
+  deploy:
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to AWS using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Upload site to S3
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET }} --delete \
+            --exclude ".git/*" --exclude ".github/*" --exclude "infra/*" \
+            --exclude "*.md" --exclude ".gitignore"
+
+      - name: Clear CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} --paths "/*"
