@@ -21,6 +21,8 @@ jobs:
     needs: validate
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    env:
+      CF_ID: ${{ secrets.CF_DISTRIBUTION_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -36,7 +38,8 @@ jobs:
             --exclude ".git/*" --exclude ".github/*" --exclude "infra/*" \
             --exclude "*.md" --exclude ".gitignore"
 
-      - name: Clear CloudFront cache
+      - name: Clear CloudFront cache (only if CloudFront is set up)
+        if: env.CF_ID != ''
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} --paths "/*"
+            --distribution-id "$CF_ID" --paths "/*"
