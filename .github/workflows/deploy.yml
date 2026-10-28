@@ -29,8 +29,8 @@ jobs:
       - name: Login to AWS using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: arn:aws:iam::992382545912:role/intech-site-temp-GitHubDeployRole-WqpQVp3Vitm0
+          aws-region: ap-south-1
 
       - name: Upload site to S3
         run: |
