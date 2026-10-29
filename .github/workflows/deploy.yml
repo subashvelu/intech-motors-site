@@ -22,19 +22,19 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
-      CF_ID: ${{ secrets.CF_DISTRIBUTION_ID }}
+      CF_ID: E2SCBREVWS945N
     steps:
       - uses: actions/checkout@v4
 
       - name: Login to AWS using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::992382545912:role/intech-site-temp-GitHubDeployRole-WqpQVp3Vitm0
+          role-to-assume: arn:aws:iam::992382545912:role/intech-site-GitHubDeployRole-xZcDvwOP3vIc
           aws-region: ap-south-1
 
       - name: Upload site to S3
         run: |
-          aws s3 sync . s3://${{ secrets.S3_BUCKET }} --delete \
+          aws s3 sync . s3://intech-site-sitebucket-xhxxjz72ofp8 --delete \
             --exclude ".git/*" --exclude ".github/*" --exclude "infra/*" \
             --exclude "*.md" --exclude ".gitignore"
 
