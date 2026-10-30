@@ -1,29 +1,135 @@
-﻿<!-- Customer & Vehicle Details -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-slate-50 p-4 rounded-lg border border-slate-200">
-  <div>
-    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Customer Phone Number</label>
-    <input type="tel" id="custPhone" maxlength="10" pattern="[0-9]{10}" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="10" pattern="[0-9]{10}" 
-           oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
-           placeholder="10-digit mobile number" 
-           class="w-full border rounded px-3 py-2 text-sm focus:outline-blue-500">
-  </div>
-  <div>
-    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Customer Name</label>
-    <input type="text" id="custName" maxlength="30" oninput="this.value=this.value.replace(/[^a-zA-Z\s]/g,'')" maxlength="30" 
-           oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
-           placeholder="Customer Name (Max 30 chars)" 
-           class="w-full border rounded px-3 py-2 text-sm focus:outline-blue-500">
-  </div>
-  <div>
-    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Vehicle Name / Model</label>
-    <input type="text" id="vehName" maxlength="30" placeholder="e.g. Renault Kiger" class="w-full border rounded px-3 py-2 text-sm focus:outline-blue-500">
-  </div>
-  <div>
-    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Vehicle Reg Number</label>
-    <input type="text" id="vehReg" maxlength="15" placeholder="e.g. TN 06 AC 1606" class="w-full border rounded px-3 py-2 text-sm focus:outline-blue-500 uppercase">
-  </div>
-  <div>
-    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">KMs Driven</label>
-    <input type="number" id="vehKm" placeholder="e.g. 21101" class="w-full border rounded px-3 py-2 text-sm focus:outline-blue-500">
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Intech Motors – multi brand car service in Mylapore, Chennai. Servicing, repairs, AC, brakes, electrical and body work.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0d11">
+<title>Intech Motors – Multi Brand Car Service, Mylapore, Chennai</title>
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="prog" aria-hidden="true"><div class="bar" id="progBar"></div><div class="pc" id="progCar"><svg class="carsvg" style="width:46px" viewBox="0 0 230 82" aria-hidden="true"><defs><linearGradient id="cg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe9b0"/><stop offset=".5" stop-color="#d4a62a"/><stop offset="1" stop-color="#8f6b12"/></linearGradient></defs><path fill="url(#cg2)" d="M6 58 L8 47 Q10 41 24 39 L58 35 Q70 19 84 15 Q92 13 104 13 L134 13 Q148 13 158 23 L172 35 L200 39 Q222 43 224 55 L224 60 Q224 64 220 64 L10 64 Q6 64 6 60 Z"/><path fill="#0a0d11" stroke="#8f6b12" d="M80 33 Q90 20 104 19 L132 19 Q142 19 150 29 L158 34 Z"/><path stroke="#8f6b12" stroke-width="1.2" d="M118 20 L118 34"/><path stroke="#0a0d11" stroke-width="1.2" fill="none" d="M24 46 L60 44 M170 44 L214 47"/><circle cx="58" cy="64" r="18" fill="#0a0d11"/><circle cx="178" cy="64" r="18" fill="#0a0d11"/><g class="wh"><circle cx="58" cy="64" r="14" fill="#11151b" stroke="#f5dc8a" stroke-width="3"/><path stroke="#d4a62a" stroke-width="2" d="M58 53 L58 75 M47 64 L69 64 M50 56 L66 72 M66 56 L50 72"/><circle cx="58" cy="64" r="4" fill="#fbe9b0"/></g><g class="wh"><circle cx="178" cy="64" r="14" fill="#11151b" stroke="#f5dc8a" stroke-width="3"/><path stroke="#d4a62a" stroke-width="2" d="M178 53 L178 75 M167 64 L189 64 M170 56 L186 72 M186 56 L170 72"/><circle cx="178" cy="64" r="4" fill="#fbe9b0"/></g><path fill="#fff6c8" d="M212 46 L224 50 L224 54 L212 52 Z"/><path fill="#ff4d3d" d="M6 49 L6 55 L12 55 L12 47 Z"/></svg></div></div>
+<div class="top"><div class="wrap"><span>Mylapore, Chennai – 600004</span><span><a href="tel:+919500165968">Call: +91 95001 65968</a></span></div></div>
+<header><div class="wrap"><nav>
+<a class="logo" href="#top"><img src="assets/img/logo-sm.png" alt="Intech Motors logo"><div><span class="gold">INTECH MOTORS</span><small>Multi Brand Car Service</small></div></a>
+<ul><li><a href="#services">Services</a></li><li><a href="#estimate">Estimate</a></li><li><a href="#gallery">Workshop</a></li><li><a href="#why">Why Us</a></li><li><a href="#contact">Contact</a></li></ul>
+<a class="btn" href="tel:+919500165968">Call Now</a>
+</nav></div></header>
+
+<div class="hero" id="top"><div class="wrap">
+<div>
+<div class="eyebrow">Multi Brand Car Service</div>
+<h1>Precision care for <span class="gold">every drive</span></h1>
+<p>Honest diagnosis, clear estimates and skilled repairs for every make of car. Visit Intech Motors in West Chitrakulam, Mylapore.</p>
+<div class="cta"><a class="btn" href="#estimate">Get an Estimate</a><a class="btn out" href="#contact">Book a Service</a></div>
 </div>
+<div class="emb"><div class="ring"></div><img src="assets/img/logo.png" alt="Intech Motors emblem"></div>
+</div></div>
+
+<div class="wrap"><div class="stats">
+<div class="stat"><strong>Mylapore</strong><span>Central Chennai</span></div>
+<div class="stat"><strong>All Makes</strong><span>Hatchbacks &amp; SUVs</span></div>
+<div class="stat"><strong>Estimate First</strong><span>No surprise bills</span></div>
+<div class="stat"><strong>Walk-ins</strong><span>Welcome</span></div>
+</div></div>
+
+<div class="road" aria-hidden="true"><div class="lane"></div><div class="drive"><svg class="carsvg" style="width:100%" viewBox="0 0 230 82" aria-hidden="true"><defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe9b0"/><stop offset=".5" stop-color="#d4a62a"/><stop offset="1" stop-color="#8f6b12"/></linearGradient></defs><path fill="url(#cg)" d="M6 58 L8 47 Q10 41 24 39 L58 35 Q70 19 84 15 Q92 13 104 13 L134 13 Q148 13 158 23 L172 35 L200 39 Q222 43 224 55 L224 60 Q224 64 220 64 L10 64 Q6 64 6 60 Z"/><path fill="#0a0d11" stroke="#8f6b12" d="M80 33 Q90 20 104 19 L132 19 Q142 19 150 29 L158 34 Z"/><path stroke="#8f6b12" stroke-width="1.2" d="M118 20 L118 34"/><path stroke="#0a0d11" stroke-width="1.2" fill="none" d="M24 46 L60 44 M170 44 L214 47"/><circle cx="58" cy="64" r="18" fill="#0a0d11"/><circle cx="178" cy="64" r="18" fill="#0a0d11"/><g class="wh"><circle cx="58" cy="64" r="14" fill="#11151b" stroke="#f5dc8a" stroke-width="3"/><path stroke="#d4a62a" stroke-width="2" d="M58 53 L58 75 M47 64 L69 64 M50 56 L66 72 M66 56 L50 72"/><circle cx="58" cy="64" r="4" fill="#fbe9b0"/></g><g class="wh"><circle cx="178" cy="64" r="14" fill="#11151b" stroke="#f5dc8a" stroke-width="3"/><path stroke="#d4a62a" stroke-width="2" d="M178 53 L178 75 M167 64 L189 64 M170 56 L186 72 M186 56 L170 72"/><circle cx="178" cy="64" r="4" fill="#fbe9b0"/></g><path fill="#fff6c8" d="M212 46 L224 50 L224 54 L212 52 Z"/><path fill="#ff4d3d" d="M6 49 L6 55 L12 55 L12 47 Z"/></svg></div></div>
+<div class="brands" aria-label="Brands we service"><div class="mq"><span>Maruti Suzuki</span><span>Hyundai</span><span>Tata</span><span>Mahindra</span><span>Honda</span><span>Toyota</span><span>Kia</span><span>Renault</span><span>Nissan</span><span>Ford</span><span>Volkswagen</span><span>Skoda</span><span>MG</span><span>Maruti Suzuki</span><span>Hyundai</span><span>Tata</span><span>Mahindra</span><span>Honda</span><span>Toyota</span><span>Kia</span><span>Renault</span><span>Nissan</span><span>Ford</span><span>Volkswagen</span><span>Skoda</span><span>MG</span></div></div>
+
+<section id="services"><div class="wrap">
+<div class="head"><div class="eyebrow">What We Do</div><h2>Complete <span class="gold">vehicle services</span></h2><p>From routine maintenance to complex repairs, handled under one roof.</p></div>
+<div class="grid">
+<div class="svc"><div class="n">01</div><h3>General Service</h3><p>Oil and filter change, fluid checks and a full multi-point inspection.</p></div>
+<div class="svc"><div class="n">02</div><h3>Engine &amp; Transmission</h3><p>Diagnostics, tuning, clutch and gearbox repair.</p></div>
+<div class="svc"><div class="n">03</div><h3>Brakes &amp; Suspension</h3><p>Pads, discs, shock absorbers, steering and alignment.</p></div>
+<div class="svc"><div class="n">04</div><h3>Electrical &amp; Battery</h3><p>Wiring faults, battery and alternator care.</p></div>
+<div class="svc"><div class="n">05</div><h3>Air Conditioning</h3><p>Gas refill, compressor and cooling system repair.</p></div>
+<div class="svc"><div class="n">06</div><h3>Body &amp; Detailing</h3><p>Denting, painting, polishing and cleaning.</p></div>
+</div></div></section>
+
+<section id="estimate" class="alt"><div class="wrap">
+<div class="head"><div class="eyebrow">Instant Estimate</div><h2>Get your <span class="gold">service estimate</span></h2><p>Choose the services you need, add your car details and download a PDF estimate. Choose your car type to see approximate rates. The final amount is confirmed after inspection.</p></div>
+<div class="est">
+<div class="est-left">
+<div class="svclist" id="svcList"></div>
+<div class="custom"><h3>Need something else?</h3>
+<div class="crow"><input id="cDesc" placeholder="Describe the work" aria-label="Describe the work"><input id="cAmt" type="number" min="0" placeholder="Amount (Rs.)" aria-label="Amount"><button class="btn out" id="cAdd" type="button">Add</button></div>
+<ul id="cList" class="clist"></ul></div>
+</div>
+<aside class="est-right">
+<h3 class="gold">Your estimate</h3>
+<div class="egrid">
+<div class="full"><label for="eType">Car type</label><select id="eType"><option value="0">Hatchback</option><option value="1">Sedan</option><option value="2">SUV / MUV</option></select></div>
+<div><label for="eName">Name</label><input id="eName" autocomplete="name"></div>
+<div><label for="ePhone">Phone</label><input id="ePhone" type="tel" autocomplete="tel"></div>
+<div><label for="eVeh">Vehicle (make &amp; model)</label><input id="eVeh"></div>
+<div><label for="eNo">Vehicle number</label><input id="eNo"></div>
+<div class="full"><label for="eKm">KMs driven</label><input id="eKm" inputmode="numeric"></div>
+</div>
+<ul id="sumList" class="sum"></ul>
+<div class="tot"><span>Estimated total</span><strong id="sumTotal">Rs. 0</strong></div>
+<label for="eRem">Remarks / works</label><textarea id="eRem" rows="3" placeholder="Anything we should know about your car?"></textarea>
+<div class="ebtns"><button class="btn" id="eDl" type="button">Download PDF Estimate</button><button class="btn out" id="eWa" type="button">Send to Shop on WhatsApp</button></div>
+<p id="eMsg" class="emsg" role="status"></p>
+</aside>
+</div></div></section>
+
+<section id="gallery"><div class="wrap">
+<div class="head"><div class="eyebrow">Our Workshop</div><h2>See where <span class="gold">we work</span></h2><p>Swipe to see more. Tap a photo to enlarge.</p></div>
+<div class="carwrap"><button class="arr l" id="pv" aria-label="Previous photo">‹</button><div class="gal" id="gal">
+<button data-i="0"><img src="assets/img/interior.jpg" alt="Inside our workshop with a car on service"><span>Inside our workshop</span></button>
+<button data-i="1"><img src="assets/img/brezza.jpg" alt="Engine bay inspection" style="object-position:center 65%"><span>Engine bay inspection</span></button>
+<button data-i="2"><img src="assets/img/work.jpg" alt="Technicians at work under the hood"><span>Our technicians at work</span></button>
+<button data-i="3"><img src="assets/img/front.jpg" alt="Workshop front view"><span>Workshop front view</span></button>
+</div><button class="arr r" id="nx" aria-label="Next photo">›</button></div><div class="dots" id="dots"></div>
+</div></section>
+
+<section id="why"><div class="wrap why">
+<div class="head" style="margin:0"><div class="eyebrow">Why Intech</div><h2>Workmanship <span class="gold">you can rely on</span></h2><p>We treat every vehicle with care and explain the work before we start.</p></div>
+<ul>
+<li><strong>Hands-on technicians</strong><span>Experienced mechanics with a well-organised tool bay.</span></li>
+<li><strong>Transparent pricing</strong><span>You approve the estimate before any work begins.</span></li>
+<li><strong>Quality parts</strong><span>Reliable spares fitted properly.</span></li>
+<li><strong>Convenient location</strong><span>Easy to reach in the heart of Mylapore.</span></li>
+</ul></div></section>
+
+<section class="alt"><div class="wrap">
+<div class="head"><div class="eyebrow">Our Process</div><h2>Simple and <span class="gold">clear</span></h2></div>
+<div class="steps">
+<div class="step"><h3>Book</h3><p>Call us or send a WhatsApp message.</p></div>
+<div class="step"><h3>Inspect</h3><p>Full check-up and a clear estimate.</p></div>
+<div class="step"><h3>Repair</h3><p>Work starts after your approval.</p></div>
+<div class="step"><h3>Deliver</h3><p>Quality check and handover.</p></div>
+</div></div></section>
+
+<section id="contact"><div class="wrap">
+<div class="head"><div class="eyebrow">Get In Touch</div><h2>Book your <span class="gold">appointment</span></h2><p>Send your details and we will get back to you.</p></div>
+<div class="contact">
+<form id="f">
+<div><label for="n">Name</label><input id="n" required></div>
+<div><label for="p">Phone</label><input id="p" type="tel" required></div>
+<div><label for="v">Vehicle (make &amp; model)</label><input id="v"></div>
+<div><label for="s">Service</label><select id="s"><option>General Service</option><option>Engine / Transmission</option><option>Brakes &amp; Suspension</option><option>Electrical / Battery</option><option>Air Conditioning</option><option>Body &amp; Detailing</option><option>Other</option></select></div>
+<div class="full"><label for="m">Describe the issue</label><textarea id="m" rows="4"></textarea></div>
+<div class="full"><button class="btn" type="submit">Send via WhatsApp</button></div>
+</form>
+<div class="info"><h3 class="gold">Intech Motors</h3>
+<p><small>Address</small>Alamelu Manga Puram, West Chitrakulam,<br>Mylapore, Chennai, Tamil Nadu 600004<br><a class="l" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=Intech+Motors+Alamelu+Manga+Puram+West+Chitrakulam+Mylapore+Chennai+600004">Get directions</a></p>
+<p><small>Phone</small><a class="l" href="tel:+919500165968">+91 95001 65968</a></p>
+<p style="margin:0"><small>Hours</small>Mon – Sat: 10:00 AM – 10:00 PM</p></div>
+</div></div></section>
+
+<footer><div class="wrap"><img src="assets/img/logo-sm.png" alt="Intech Motors"><span>© 2026 Intech Motors. All rights reserved. · Mylapore, Chennai</span></div></footer>
+<a class="fab" href="https://wa.me/919500165968">WhatsApp Us</a>
+<div id="lb"><img alt=""></div>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/jspdf.umd.min.js"></script>
+<script src="assets/js/services.js"></script>
+<script src="assets/js/pdf-estimate.js"></script>
+<script src="assets/js/estimate.js"></script>
+<script src="assets/js/fx.js"></script>
+</body>
+</html>
