@@ -1,11 +1,10 @@
 (function () {
-  var S = window.SERVICES || [], TYPES = window.CAR_TYPES || ["Hatchback", "Sedan", "SUV / MUV"];
+  var S = window.SERVICES || [];
   var sel = {}, custom = [], logo = null, prs = [];
   var $ = function (i) { return document.getElementById(i); };
   var inr = function (n) { return "Rs. " + Number(n).toLocaleString("en-IN"); };
   if (!$("svcList")) return;
-  function tIdx() { return parseInt($("eType").value, 10) || 0; }
-  function rateOf(s) { return Array.isArray(s.rate) ? s.rate[tIdx()] : s.rate; }
+  function rateOf(s) { return Array.isArray(s.rate) ? s.rate[0] : s.rate; }
 
   S.forEach(function (s, i) {
     var l = document.createElement("label"); l.className = "item";
@@ -42,7 +41,6 @@
     });
     $("sumTotal").textContent = inr(total);
   }
-  $("eType").addEventListener("change", update);
 
   function renderCustom() {
     var ul = $("cList"); ul.innerHTML = "";
@@ -69,10 +67,16 @@
       date: n.getFullYear() + "-" + p(n.getMonth() + 1) + "-" + p(n.getDate()),
       customer: $("eName").value.trim(), phone: $("ePhone").value.trim(),
       vehicle: $("eVeh").value.trim(), vehicleNo: $("eNo").value.trim().toUpperCase(), kms: $("eKm").value.trim(),
-      type: TYPES[tIdx()], remarks: $("eRem").value, items: items()
+      remarks: $("eRem").value, items: items()
     };
   }
   function msg(t) { $("eMsg").textContent = t; }
+  function validCustomer(d) {
+    if (!d.customer || d.customer.length > 40) { msg("Please enter a name (maximum 40 characters)."); $("eName").focus(); return false; }
+    if (!/^[0-9]{10}$/.test(d.phone)) { msg("Please enter a valid 10-digit mobile number."); $("ePhone").focus(); return false; }
+    return true;
+  }
+  $("ePhone").addEventListener("input", function () { this.value = this.value.replace(/\D/g, "").slice(0, 10); });
   function loadLogo(cb) {
     if (logo) return cb(logo);
     fetch("assets/img/logo-pdf.jpg").then(function (r) { return r.blob(); }).then(function (b) {
@@ -81,7 +85,7 @@
   }
   $("eDl").addEventListener("click", function () {
     var d = data(); msg("");
-    if (!d.items.length) { msg("Please select at least one service."); return; }
+    if (!validCustomer(d) || !d.items.length) { if (!d.items.length) msg("Please select at least one service."); return; }
     if (!window.jspdf || !window.buildEstimatePDF) { msg("PDF tool did not load. Please refresh and try again."); return; }
     loadLogo(function (lg) {
       try { window.buildEstimatePDF(window.jspdf.jsPDF, d, lg).save("Intech-Motors-" + d.no + ".pdf"); msg("Your estimate PDF is downloading."); }
@@ -90,11 +94,11 @@
   });
   $("eWa").addEventListener("click", function () {
     var d = data(); msg("");
-    if (!d.items.length) { msg("Please select at least one service."); return; }
+    if (!validCustomer(d) || !d.items.length) { if (!d.items.length) msg("Please select at least one service."); return; }
     var t = "Hello Intech Motors, I would like a service estimate.\n";
     if (d.customer) t += "Name: " + d.customer + "\n";
     if (d.phone) t += "Phone: " + d.phone + "\n";
-    t += "Vehicle: " + (d.vehicle || "-") + " " + d.vehicleNo + " (" + d.type + (d.kms ? ", " + d.kms + " km" : "") + ")\n\nServices:\n";
+    t += "Vehicle: " + (d.vehicle || "-") + " " + d.vehicleNo + (d.kms ? " (" + d.kms + " km)" : "") + "\n\nServices:\n";
     var tot = 0;
     d.items.forEach(function (it) { t += "- " + it.desc + (it.qty > 1 ? " x" + it.qty : "") + " : " + inr(it.rate * it.qty) + "\n"; tot += it.rate * it.qty; });
     t += "\nApprox. total: " + inr(tot); if (d.remarks.trim()) t += "\nRemarks: " + d.remarks.trim();

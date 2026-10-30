@@ -51,7 +51,7 @@
 </div></div></section>
 
 <section id="estimate" class="alt"><div class="wrap">
-<div class="head"><div class="eyebrow">Instant Estimate</div><h2>Get your <span class="gold">service estimate</span></h2><p>Choose the services you need, add your car details and download a PDF estimate. Choose your car type to see approximate rates. The final amount is confirmed after inspection.</p></div>
+<div class="head"><div class="eyebrow">Instant Estimate</div><h2>Get your <span class="gold">service estimate</span></h2><p>Choose the services you need, add your car details and download a PDF estimate. Select the services you need to view an approximate estimate. The final amount is confirmed after inspection.</p></div>
 <div class="est">
 <div class="est-left">
 <div class="svclist" id="svcList"></div>
@@ -62,9 +62,9 @@
 <aside class="est-right">
 <h3 class="gold">Your estimate</h3>
 <div class="egrid">
-<div class="full"><label for="eType">Car type</label><select id="eType"><option value="0">Hatchback</option><option value="1">Sedan</option><option value="2">SUV / MUV</option></select></div>
-<div><label for="eName">Name</label><input id="eName" autocomplete="name"></div>
-<div><label for="ePhone">Phone</label><input id="ePhone" type="tel" autocomplete="tel"></div>
+
+<div><label for="eName">Name</label><input id="eName" autocomplete="name" maxlength="40" required></div>
+<div><label for="ePhone">Phone</label><input id="ePhone" type="tel" autocomplete="tel" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" title="Enter exactly 10 digits" required></div>
 <div><label for="eVeh">Vehicle (make &amp; model)</label><input id="eVeh"></div>
 <div><label for="eNo">Vehicle number</label><input id="eNo"></div>
 <div class="full"><label for="eKm">KMs driven</label><input id="eKm" inputmode="numeric"></div>
@@ -109,8 +109,8 @@
 <div class="head"><div class="eyebrow">Get In Touch</div><h2>Book your <span class="gold">appointment</span></h2><p>Send your details and we will get back to you.</p></div>
 <div class="contact">
 <form id="f">
-<div><label for="n">Name</label><input id="n" required></div>
-<div><label for="p">Phone</label><input id="p" type="tel" required></div>
+<div><label for="n">Name</label><input id="n" maxlength="40" required></div>
+<div><label for="p">Phone</label><input id="p" type="tel" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" title="Enter exactly 10 digits" required></div>
 <div><label for="v">Vehicle (make &amp; model)</label><input id="v"></div>
 <div><label for="s">Service</label><select id="s"><option>General Service</option><option>Engine / Transmission</option><option>Brakes &amp; Suspension</option><option>Electrical / Battery</option><option>Air Conditioning</option><option>Body &amp; Detailing</option><option>Other</option></select></div>
 <div class="full"><label for="m">Describe the issue</label><textarea id="m" rows="4"></textarea></div>

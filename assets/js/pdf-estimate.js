@@ -25,10 +25,10 @@
     doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(70);
     doc.text(["16/2 West Chitrakulam", "Mylapore, Chennai - 600004", "Tamil Nadu", "Phone: 95001 65968"], 68, 29.5);
 
-    doc.setFont("times", "bold"); doc.setFontSize(26); txt(navy); doc.text("ESTIMATE", W - M, 20, { align: "right" });
+    doc.setFont("times", "bold"); doc.setFontSize(26); txt(navy); doc.text(d.documentType || "ESTIMATE", W - M, 20, { align: "right" });
     function lab(t, x, y) { doc.setFont("helvetica", "bold"); doc.setFontSize(8); txt(gold); doc.text(t, x, y); }
     function val(t, x, y) { doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); doc.setTextColor(30); doc.text(String(t || "-"), x, y); }
-    lab("Estimate No.", 134, 28); lab("Estimate Date", 172, 28);
+    lab((d.documentType === "INVOICE" ? "Invoice" : "Estimate") + " No.", 134, 28); lab((d.documentType === "INVOICE" ? "Invoice" : "Estimate") + " Date", 172, 28);
     val(d.no, 134, 33); val(d.date, 172, 33);
     lab("Customer No.", 134, 40); lab("Customer Name", 172, 40);
     val(d.phone, 134, 45); val((d.customer || "-").slice(0, 18), 172, 45);
@@ -37,8 +37,8 @@
 
     // ---------- vehicle box ----------
     doc.roundedRect(M, 57, W - 2 * M, 15, 2, 2);
-    [["Vehicle Name", d.vehicle], ["Vehicle Number", d.vehicleNo], ["KMs Driven", d.kms], ["Car Type", d.type]].forEach(function (c, i) {
-      var x = M + 5 + i * 45;
+    [["Vehicle Name", d.vehicle], ["Vehicle Number", d.vehicleNo], ["KMs Driven", d.kms]].forEach(function (c, i) {
+      var x = M + 5 + i * 63;
       doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); txt(gold); doc.text(c[0].toUpperCase(), x, 63);
       doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(30); doc.text(String(c[1] || "-").slice(0, 20), x, 69);
     });
@@ -76,21 +76,23 @@
     doc.text("SUB TOTAL", W - M - 78, y + 7); doc.text(inr(sub), W - M - 4, y + 7, { align: "right" });
     doc.setDrawColor(225, 225, 225); doc.line(W - M - 82, y + 11, W - M, y + 11);
     doc.setFont("helvetica", "bold"); doc.setFontSize(10); txt(gold);
-    doc.text("ESTIMATED TOTAL", W - M - 78, y + 19); doc.text(inr(sub), W - M - 4, y + 19, { align: "right" });
+    doc.text((d.documentType === "INVOICE" ? "GRAND TOTAL" : "ESTIMATED TOTAL"), W - M - 78, y + 19); doc.text(inr(sub), W - M - 4, y + 19, { align: "right" });
     doc.setFont("helvetica", "italic"); doc.setFontSize(8); doc.setTextColor(110);
-    doc.text("GST, if applicable, will be added at the time of billing.", M, y + 7);
+    doc.text(d.documentType === "INVOICE" ? "Thank you for choosing Intech Motors." : "GST, if applicable, will be added at the time of billing.", M, y + 7);
     y += 32;
 
     // ---------- remarks ----------
     var blocks = [];
     var rem = (d.remarks || "").trim();
     if (rem) blocks.push({ b: true, t: "Customer remarks:" }, { t: doc.splitTextToSize(rem, W - 2 * M - 10) });
-    blocks.push({ b: true, t: "Notes:" });
-    NOTES.forEach(function (n) { blocks.push({ t: doc.splitTextToSize("-  " + n, W - 2 * M - 10) }); });
+    if (d.documentType !== "INVOICE") {
+      blocks.push({ b: true, t: "Notes:" });
+      NOTES.forEach(function (n) { blocks.push({ t: doc.splitTextToSize("-  " + n, W - 2 * M - 10) }); });
+    }
     var lineCount = 0; blocks.forEach(function (b) { lineCount += Array.isArray(b.t) ? b.t.length : 1; });
     var rh = lineCount * 4.7 + 10;
     if (y + rh + 40 > 285) { doc.addPage(); frame(); y = 16; }
-    doc.setFont("helvetica", "bold"); doc.setFontSize(11); txt(navy); doc.text("REMARKS / WORKS", M, y + 3);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(11); txt(navy); doc.text(d.documentType === "INVOICE" ? "WORK DETAILS / REMARKS" : "REMARKS / WORKS", M, y + 3);
     doc.setDrawColor(gold[0], gold[1], gold[2]); doc.setLineWidth(0.3); doc.roundedRect(M, y + 6, W - 2 * M, rh, 2, 2);
     var yy = y + 13; doc.setFontSize(9);
     blocks.forEach(function (b) {
