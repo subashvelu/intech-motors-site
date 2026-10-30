@@ -1,98 +1,29 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="description" content="Intech Motors – automobile workshop in Mylapore, Chennai. Car servicing, repairs, AC, brakes, electrical and body work.">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Intech Motors – Automobile Workshop, Mylapore, Chennai</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
-<div class="top"><div class="wrap"><span>Mylapore, Chennai – 600004</span><span><a href="tel:+919500165968">Call: +91 95001 65968</a> &nbsp;|&nbsp; <a target="_blank" rel="noopener" href="https://www.instagram.com/in_techmotors">Instagram</a></span></div></div>
-<header><div class="wrap"><nav>
-<a class="logo" href="#top"><svg viewBox="0 0 48 48" aria-hidden="true"><polygon points="21.0,7.3 21.7,2.1 26.3,2.1 27.0,7.3 31.5,8.7 35.0,4.9 38.7,7.7 36.2,12.2 39.0,16.0 44.1,15.1 45.5,19.4 40.8,21.6 40.8,26.4 45.5,28.6 44.1,32.9 39.0,32.0 36.2,35.8 38.7,40.3 35.0,43.1 31.5,39.3 27.0,40.7 26.3,45.9 21.7,45.9 21.0,40.7 16.5,39.3 13.0,43.1 9.3,40.3 11.8,35.8 9.0,32.0 3.9,32.9 2.5,28.6 7.2,26.4 7.2,21.6 2.5,19.4 3.9,15.1 9.0,16.0 11.8,12.2 9.3,7.7 13.0,4.9 16.5,8.7" fill="#d62d20"/><circle cx="24" cy="24" r="12" fill="#0e1726"/><circle cx="24" cy="16.5" r="2.5" fill="#fff"/><rect x="21.8" y="21" width="4.4" height="12.5" rx="1.6" fill="#fff"/></svg><span><b>INTECH</b><em>MOTORS</em></span></a>
-<ul><li><a href="#services">Services</a></li><li><a href="#gallery">Workshop</a></li><li><a href="#why">Why Us</a></li><li><a href="#contact">Contact</a></li></ul>
-<a class="btn" href="tel:+919500165968">Call Now</a>
-</nav></div></header>
-
-<div class="hero" id="top"><div class="wrap">
-<div>
-<div class="eyebrow">Automobile Workshop · Mylapore, Chennai</div>
-<h1>Dependable car care, done right</h1>
-<p>Honest diagnosis, clear estimates and skilled repairs for your car. Visit Intech Motors in West Chitrakulam, Mylapore.</p>
-<div class="cta"><a class="btn" href="#contact">Book a Service</a><a class="btn out" href="#gallery">See Our Workshop</a></div>
+﻿<!-- Customer & Vehicle Details -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-slate-50 p-4 rounded-lg border border-slate-200">
+  <div>
+    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Customer Phone Number</label>
+    <input type="tel" id="custPhone" maxlength="10" pattern="[0-9]{10}" oninput="this.value=this.value.replace(/[^0-9]/g,'')" maxlength="10" pattern="[0-9]{10}" 
+           oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+           placeholder="10-digit mobile number" 
+           class="w-full border rounded px-3 py-2 text-sm focus:outline-blue-500">
+  </div>
+  <div>
+    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Customer Name</label>
+    <input type="text" id="custName" maxlength="30" oninput="this.value=this.value.replace(/[^a-zA-Z\s]/g,'')" maxlength="30" 
+           oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+           placeholder="Customer Name (Max 30 chars)" 
+           class="w-full border rounded px-3 py-2 text-sm focus:outline-blue-500">
+  </div>
+  <div>
+    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Vehicle Name / Model</label>
+    <input type="text" id="vehName" maxlength="30" placeholder="e.g. Renault Kiger" class="w-full border rounded px-3 py-2 text-sm focus:outline-blue-500">
+  </div>
+  <div>
+    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Vehicle Reg Number</label>
+    <input type="text" id="vehReg" maxlength="15" placeholder="e.g. TN 06 AC 1606" class="w-full border rounded px-3 py-2 text-sm focus:outline-blue-500 uppercase">
+  </div>
+  <div>
+    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">KMs Driven</label>
+    <input type="number" id="vehKm" placeholder="e.g. 21101" class="w-full border rounded px-3 py-2 text-sm focus:outline-blue-500">
+  </div>
 </div>
-<figure><img src="assets/img/front.jpg" alt="Intech Motors workshop entrance in Mylapore, Chennai"></figure>
-</div></div>
-
-<div class="wrap"><div class="stats">
-<div class="stat"><strong>Mylapore</strong><span>Central Chennai</span></div>
-<div class="stat"><strong>All Makes</strong><span>Hatchbacks &amp; SUVs</span></div>
-<div class="stat"><strong>Estimate First</strong><span>No surprise bills</span></div>
-<div class="stat"><strong>Walk-ins</strong><span>Welcome</span></div>
-</div></div>
-
-<section id="services"><div class="wrap">
-<div class="head"><div class="eyebrow">What We Do</div><h2>Complete vehicle services</h2><p>From routine maintenance to complex repairs, handled under one roof.</p></div>
-<div class="grid">
-<div class="svc"><div class="n">01</div><h3>General Service</h3><p>Oil and filter change, fluid checks and a full multi-point inspection.</p></div>
-<div class="svc"><div class="n">02</div><h3>Engine &amp; Transmission</h3><p>Diagnostics, tuning, clutch and gearbox repair.</p></div>
-<div class="svc"><div class="n">03</div><h3>Brakes &amp; Suspension</h3><p>Pads, discs, shock absorbers, steering and alignment.</p></div>
-<div class="svc"><div class="n">04</div><h3>Electrical &amp; Battery</h3><p>Wiring faults, battery and alternator care.</p></div>
-<div class="svc"><div class="n">05</div><h3>Air Conditioning</h3><p>Gas refill, compressor and cooling system repair.</p></div>
-<div class="svc"><div class="n">06</div><h3>Body &amp; Detailing</h3><p>Denting, painting, polishing and cleaning.</p></div>
-</div></div></section>
-
-<section id="gallery" class="alt"><div class="wrap">
-<div class="head"><div class="eyebrow">Our Workshop</div><h2>See where we work</h2><p>Swipe to see more. Tap a photo to enlarge.</p></div>
-<div class="carwrap"><button class="arr l" id="pv" aria-label="Previous photo">‹</button><div class="gal" id="gal">
-<button data-i="0"><img src="assets/img/interior.jpg" alt="Inside our workshop"><span>Inside our workshop</span></button>
-<button data-i="1"><img src="assets/img/brezza.jpg" alt="Engine bay inspection" style="object-position:center 65%"><span>Engine bay inspection</span></button>
-<button data-i="2"><img src="assets/img/work.jpg" alt="Our technicians at work"><span>Our technicians at work</span></button>
-<button data-i="3"><img src="assets/img/front.jpg" alt="Workshop front view"><span>Workshop front view</span></button>
-</div><button class="arr r" id="nx" aria-label="Next photo">›</button></div><div class="dots" id="dots"></div></div></section>
-
-<section id="why"><div class="wrap why">
-<div class="head" style="margin:0"><div class="eyebrow">Why Intech</div><h2>Workmanship you can rely on</h2><p>We treat every vehicle with care and explain the work before we start.</p></div>
-<ul>
-<li><strong>Hands-on technicians</strong><span>Experienced mechanics with a well-organised tool bay.</span></li>
-<li><strong>Transparent pricing</strong><span>You approve the estimate before any work begins.</span></li>
-<li><strong>Quality parts</strong><span>Reliable spares fitted properly.</span></li>
-<li><strong>Convenient location</strong><span>Easy to reach in the heart of Mylapore.</span></li>
-</ul></div></section>
-
-<section class="alt"><div class="wrap">
-<div class="head"><div class="eyebrow">Our Process</div><h2>Simple and clear</h2></div>
-<div class="steps">
-<div class="step"><h3>Book</h3><p>Call us or send a WhatsApp message.</p></div>
-<div class="step"><h3>Inspect</h3><p>Full check-up and a clear estimate.</p></div>
-<div class="step"><h3>Repair</h3><p>Work starts after your approval.</p></div>
-<div class="step"><h3>Deliver</h3><p>Quality check and handover.</p></div>
-</div></div></section>
-
-<section id="contact"><div class="wrap">
-<div class="head"><div class="eyebrow">Get In Touch</div><h2>Book your appointment</h2><p>Send your details and we will get back to you.</p></div>
-<div class="contact">
-<form id="f">
-<div><label for="n">Name</label><input id="n" required></div>
-<div><label for="p">Phone</label><input id="p" type="tel" required></div>
-<div><label for="v">Vehicle (make &amp; model)</label><input id="v"></div>
-<div><label for="s">Service</label><select id="s"><option>General Service</option><option>Engine / Transmission</option><option>Brakes &amp; Suspension</option><option>Electrical / Battery</option><option>Air Conditioning</option><option>Body &amp; Detailing</option><option>Other</option></select></div>
-<div class="full"><label for="m">Describe the issue</label><textarea id="m" rows="4"></textarea></div>
-<div class="full"><button class="btn" type="submit">Send via WhatsApp</button></div>
-</form>
-<div class="info"><h3>Intech Motors</h3>
-<p><small>Address</small>Alamelu Manga Puram, West Chitrakulam,<br>Mylapore, Chennai, Tamil Nadu 600004<br><a class="l" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Intech+Motors+Alamelu+Manga+Puram+West+Chitrakulam+Mylapore+Chennai+600004">Get directions</a></p>
-<p><small>Phone</small><a class="l" href="tel:+919500165968">+91 95001 65968</a></p>
-<p><small>Instagram</small><a class="l" target="_blank" rel="noopener" href="https://www.instagram.com/in_techmotors">@in_techmotors</a></p>
-<p style="margin:0"><small>Hours</small>Mon – Sat: 10:00 AM – 10:00 PM</p></div>
-</div></div></section>
-
-<footer><div class="wrap"><span>© 2026 Intech Motors. All rights reserved.</span><span><a target="_blank" rel="noopener" href="https://www.instagram.com/in_techmotors">Instagram @in_techmotors</a> &nbsp;|&nbsp; Mylapore, Chennai</span></div></footer>
-<a class="fab" href="https://wa.me/919500165968">WhatsApp Us</a>
-<div id="lb"><img alt=""></div>
-<script src="assets/js/main.js"></script>
-</body>
-</html>
-
