@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a0d11">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Intech Bills">
+<title>Intech Billing</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#0a0d11;--card:#12161c;--line:#2b2819;--gold:#d4a62a;--gold-l:#f5dc8a;--gold-d:#8f6b12;--text:#f3eee2;--muted:#a59d8a;color-scheme:dark}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+[hidden]{display:none!important}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0}
+.gold{background:linear-gradient(135deg,#fbe9b0,#d4a62a 50%,#9a7314);-webkit-background-clip:text;background-clip:text;color:transparent}
+input,select,textarea,button{font:inherit;color:inherit}
+input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+label{display:block;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 5px}
+.btn{display:block;width:100%;padding:14px;border:0;border-radius:10px;font-weight:700;letter-spacing:.04em;background:linear-gradient(135deg,#f5dc8a,#d4a62a 55%,#a77c14);color:#14100a;cursor:pointer}
+.btn.out{background:transparent;color:var(--gold-l);border:1px solid var(--gold)}
+.btn.sm{width:auto;padding:9px 14px;font-size:.85rem}
+.btn.red{background:transparent;color:#ff8f80;border:1px solid #7a2e25}
+#lock{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
+#lock img{width:150px;border-radius:12px}#lock input{max-width:260px;text-align:center;font-size:1.6rem;letter-spacing:.5em}
+#lock p{margin:0;color:var(--muted);max-width:300px}#lock .btn{max-width:260px}#lerr{color:#ff8f80;min-height:1.4em}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:.85rem}
+header{position:sticky;top:0;z-index:10;background:rgba(10,13,17,.95);border-bottom:1px solid var(--line);padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:1.15rem;letter-spacing:.1em}header small{display:block;color:var(--muted);font-size:.65rem;letter-spacing:.25em;text-transform:uppercase}
+main{max-width:640px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.card h2{font-size:1.05rem;margin-bottom:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.g2 .full{grid-column:1/-1}.f{margin-bottom:12px}
+.row{border-top:1px solid var(--line);padding:12px 0;display:grid;grid-template-columns:1fr 70px 100px;gap:8px;align-items:end}
+.row .d{grid-column:1/-1}.row .m{display:flex;justify-content:space-between;align-items:center;grid-column:1/-1;color:var(--gold-l)}
+.row .x{background:none;border:0;color:#ff8f80;font-size:.85rem;text-decoration:underline;cursor:pointer}
+.tots{margin-top:8px}.tots div{display:flex;justify-content:space-between;padding:6px 0;color:var(--muted)}
+.tots .t{border-top:1px solid var(--gold-d);margin-top:6px;padding-top:12px;color:var(--text);font-weight:700;font-size:1.15rem}
+.tots .t b{color:var(--gold-l)}
+.acts{display:grid;gap:10px;margin-top:6px}
+.hi{border:1px solid var(--line);border-radius:12px;background:var(--card);margin-bottom:10px;overflow:hidden}
+.hi .top{display:flex;justify-content:space-between;gap:10px;padding:14px;cursor:pointer}
+.hi .top b{color:var(--gold-l)}.hi .top small{display:block;color:var(--muted)}
+.hi .more{display:none;padding:0 14px 14px;gap:8px;grid-template-columns:1fr 1fr}.hi.open .more{display:grid}
+.sum{background:linear-gradient(160deg,#171b23,#0e1218);border:1px solid var(--gold-d);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;justify-content:space-between}
+.sum span{color:var(--muted);font-size:.8rem}.sum strong{display:block;font-family:Georgia,serif;font-size:1.3rem;color:var(--gold-l)}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(3,1fr);background:#07090c;border-top:1px solid var(--gold-d);padding-bottom:env(safe-area-inset-bottom,0px);z-index:20}
+.tabs button{background:none;border:0;padding:14px 4px;color:var(--muted);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.tabs button.on{color:var(--gold-l);box-shadow:inset 0 3px 0 var(--gold)}
+#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#1b1f27;border:1px solid var(--gold);color:var(--gold-l);padding:10px 18px;border-radius:30px;z-index:50;opacity:0;pointer-events:none;transition:.3s;max-width:90vw;text-align:center}
+#toast.on{opacity:1}
+.muted{color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<div id="lock">
+  <img src="icon-512.png" alt="Intech Motors">
+  <h2 class="gold" id="ltitle">Intech Billing</h2>
+  <p id="lmsg"></p>
+  <input id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="PIN" aria-label="PIN">
+  <input id="pin2" type="password" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="Repeat PIN" aria-label="Repeat PIN" hidden>
+  <button class="btn" id="lgo" type="button">Unlock</button>
+  <div id="lerr" role="alert"></div>
+  <button class="link" id="lforgot" type="button">Forgot PIN?</button>
+</div>
+
+<div id="app" hidden>
+<header><div><h1 class="gold">INTECH MOTORS</h1><small>Owner billing</small></div><button class="btn out sm" id="lockNow" type="button">Lock</button></header>
+<main>
+<section id="t-new">
+  <div class="card"><h2 id="formTitle">New invoice</h2>
+    <div class="g2">
+      <div><label for="iNo">Invoice No.</label><input id="iNo" inputmode="numeric"></div>
+      <div><label for="iDate">Invoice Date</label><input id="iDate" type="date"></div>
+      <div><label for="cPhone">Customer No.</label><input id="cPhone" type="tel"></div>
+      <div><label for="cName">Customer Name</label><input id="cName"></div>
+      <div><label for="vName">Vehicle Name</label><input id="vName"></div>
+      <div><label for="vNo">Vehicle Number</label><input id="vNo" autocapitalize="characters"></div>
+      <div class="full"><label for="vKm">KMs Driven</label><input id="vKm" inputmode="numeric"></div>
+    </div>
+  </div>
+  <div class="card"><h2>Services &amp; parts</h2>
+    <div class="f"><label for="quick">Quick add</label><select id="quick"></select></div>
+    <div id="rows"></div>
+    <button class="btn out sm" id="addRow" type="button" style="margin-top:8px">+ Add blank line</button>
+  </div>
+  <div class="card"><h2>Totals</h2>
+    <div class="g2"><div><label for="iGst">GST %</label><input id="iGst" type="number" min="0" inputmode="decimal"></div><div><label for="iDisc">Discount (Rs.)</label><input id="iDisc" type="number" min="0" inputmode="decimal"></div></div>
+    <div class="tots"><div><span>Sub total</span><span id="tSub"></span></div><div><span id="tGl">GST</span><span id="tGst"></span></div><div><span>Discount</span><span id="tDisc"></span></div><div class="t"><span>Total amount</span><b id="tTot"></b></div></div>
+  </div>
+  <div class="card"><h2>Remarks / works</h2><textarea id="iRem" rows="4" placeholder="Works done, next service due, advice for the customer..."></textarea></div>
+  <div class="acts"><button class="btn" id="savePdf" type="button">Save &amp; Create PDF</button><button class="btn out" id="saveOnly" type="button">Save only</button><button class="btn red" id="clearForm" type="button">Clear form</button></div>
+</section>
+
+<section id="t-hist" hidden>
+  <div class="sum"><div><span>This month</span><strong id="mTot">Rs. 0</strong></div><div style="text-align:right"><span>Invoices</span><strong id="mCnt">0</strong></div></div>
+  <div class="f"><input id="search" placeholder="Search name, phone, vehicle no, invoice no" aria-label="Search"></div>
+  <div id="hist"></div>
+</section>
+
+<section id="t-set" hidden>
+  <div class="card"><h2>Invoice settings</h2>
+    <div class="f"><label for="sNext">Next invoice number</label><input id="sNext" inputmode="numeric"></div>
+    <div class="f"><label for="sGst">Default GST %</label><input id="sGst" type="number" min="0" inputmode="decimal"></div>
+    <div class="f"><label for="sRem">Default remarks</label><textarea id="sRem" rows="2"></textarea></div>
+    <div class="f"><label for="sSvc">Service price list (one per line: Name | Rate)</label><textarea id="sSvc" rows="9"></textarea></div>
+    <button class="btn" id="saveSet" type="button">Save settings</button>
+  </div>
+  <div class="card"><h2>Backup (important)</h2>
+    <p class="muted">All invoices are stored only on this phone. If the phone is lost or reset, the data is lost. Download a backup often and keep it in Google Drive or WhatsApp.</p>
+    <div class="acts"><button class="btn out" id="exp" type="button">Download backup</button><button class="btn out" id="impBtn" type="button">Restore from backup</button><input id="imp" type="file" accept="application/json,.json" hidden></div>
+  </div>
+  <div class="card"><h2>Security</h2><div class="acts"><button class="btn out" id="chPin" type="button">Change PIN</button></div></div>
+</section>
+</main>
+<nav class="tabs"><button data-t="new" class="on" type="button">New</button><button data-t="hist" type="button">History</button><button data-t="set" type="button">Settings</button></nav>
+</div>
+<div id="toast" role="status"></div>
+
+<script src="jspdf.umd.min.js"></script>
+<script src="logo-data.js"></script>
+<script src="invoice-pdf.js"></script>
+<script>
+(function () {
+  var $ = function (i) { return document.getElementById(i); };
+  var p2 = function (n) { return String(n).padStart(2, "0"); };
+  function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+  function inr(n) { return "Rs. " + Number(n).toLocaleString("en-IN", { maximumFractionDigits: 2 }); }
+  function today() { var d = new Date(); return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()); }
+  function load(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
+  function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+  function toast(t) { var s = $("toast"); s.textContent = t; s.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(function () { s.classList.remove("on"); }, 2600); }
+
+  var DEF = "Standard Service | 5500\nAC Filter | 550\nFront Brake Pads | 1750\nFront Disc Facing | 1400\nWiper Blades | 480\nReverse Bulb | 40\nBumper Repair (side) | 2500\nWater Wash | 500\nEngine Oil Change | 3500\nWheel Alignment & Balancing | 1300\nAC Gas Refill & Service | 2600";
+  var set = load("im_set", { next: 3069, gst: 0, rem: "", services: DEF });
+  var inv = load("im_inv", []);
+  var rows = [], editNo = null, amts = [];
+
+  /* ---------------- PIN lock ---------------- */
+  function sha(s) {
+    if (window.crypto && crypto.subtle && window.TextEncoder) return crypto.subtle.digest("SHA-256", new TextEncoder().encode("intech:" + s)).then(function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return x.toString(16).padStart(2, "0"); }).join(""); });
+    return Promise.resolve("p:" + btoa(s));
+  }
+  var mode = "unlock", hidAt = 0;
+  function showLock() {
+    var has = !!localStorage.getItem("im_pin"); mode = has ? "unlock" : "create";
+    $("app").hidden = true; $("lock").hidden = false; $("pin").value = ""; $("pin2").value = ""; $("lerr").textContent = "";
+    $("pin2").hidden = mode !== "create"; $("lforgot").hidden = mode === "create";
+    $("lmsg").textContent = mode === "create" ? "First time: create a PIN (4 to 6 digits) to protect your billing data." : "Enter your PIN to open.";
+    $("lgo").textContent = mode === "create" ? "Create PIN" : "Unlock";
+  }
+  function openApp() { $("lock").hidden = true; $("app").hidden = false; init(); }
+  $("lgo").onclick = function () {
+    var a = $("pin").value.trim();
+    if (!/^\d{4,6}$/.test(a)) { $("lerr").textContent = "Enter 4 to 6 digits."; return; }
+    if (mode === "create") {
+      if (a !== $("pin2").value.trim()) { $("lerr").textContent = "The two PINs do not match."; return; }
+      sha(a).then(function (h) { localStorage.setItem("im_pin", h); try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {} openApp(); });
+    } else {
+      sha(a).then(function (h) { if (h === localStorage.getItem("im_pin")) openApp(); else { $("lerr").textContent = "Wrong PIN."; $("pin").value = ""; } });
+    }
+  };
+  $("pin").addEventListener("keydown", function (e) { if (e.key === "Enter") $("lgo").click(); });
+  $("lforgot").onclick = function () {
+    if (confirm("This erases ALL invoices and settings on this phone. You can restore them later from a backup file. Continue?")) { localStorage.clear(); location.reload(); }
+  };
+  $("lockNow").onclick = showLock;
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) hidAt = Date.now(); else if (hidAt && Date.now() - hidAt > 120000 && !$("app").hidden) showLock();
+  });
+
+  /* ---------------- tabs ---------------- */
+  document.querySelectorAll(".tabs button").forEach(function (b) {
+    b.onclick = function () {
+      document.querySelectorAll(".tabs button").forEach(function (x) { x.classList.toggle("on", x === b); });
+      ["new", "hist", "set"].forEach(function (t) { $("t-" + t).hidden = t !== b.dataset.t; });
+      if (b.dataset.t === "hist") renderHist(); window.scrollTo(0, 0);
+    };
+  });
+
+  /* ---------------- form ---------------- */
+  function svcList() {
+    return set.services.split("\n").map(function (l) { var p = l.split("|"); return { n: (p[0] || "").trim(), r: parseFloat(p[1]) || 0 }; }).filter(function (s) { return s.n; });
+  }
+  function fillQuick() {
+    var q = $("quick"); q.innerHTML = ""; var o = el("option", "", "Choose a service to add..."); o.value = ""; q.appendChild(o);
+    svcList().forEach(function (s, i) { var op = el("option", "", s.n + "  -  " + inr(s.r)); op.value = i; q.appendChild(op); });
+  }
+  $("quick").onchange = function () { var s = svcList()[this.value]; if (s) { rows.push({ d: s.n, q: 1, r: s.r }); renderRows(); calc(); } this.value = ""; };
+  $("addRow").onclick = function () { rows.push({ d: "", q: 1, r: 0 }); renderRows(); calc(); };
+  function renderRows() {
+    var box = $("rows"); box.innerHTML = ""; amts = [];
+    rows.forEach(function (r, i) {
+      var w = el("div", "row");
+      var dw = el("div", "d"), dl = el("label", "", "Item " + (i + 1)), d = el("input"); d.value = r.d; d.placeholder = "Service / part"; d.oninput = function () { r.d = d.value; };
+      dw.appendChild(dl); dw.appendChild(d);
+      var qw = el("div"), ql = el("label", "", "Qty"), q = el("input"); q.type = "number"; q.min = 0; q.inputMode = "decimal"; q.value = r.q; q.oninput = function () { r.q = parseFloat(q.value) || 0; calc(); };
+      qw.appendChild(ql); qw.appendChild(q);
+      var rw = el("div"), rl = el("label", "", "Rate (Rs.)"), rt = el("input"); rt.type = "number"; rt.min = 0; rt.inputMode = "decimal"; rt.value = r.r; rt.oninput = function () { r.r = parseFloat(rt.value) || 0; calc(); };
+      rw.appendChild(rl); rw.appendChild(rt);
+      var m = el("div", "m"), a = el("b", "", ""), x = el("button", "x", "Remove"); x.type = "button"; x.onclick = function () { rows.splice(i, 1); renderRows(); calc(); };
+      amts.push(a); m.appendChild(a); m.appendChild(x);
+      w.appendChild(dw); w.appendChild(qw); w.appendChild(rw); w.appendChild(m); box.appendChild(w);
+    });
+  }
+  function calc() {
+    var sub = 0; rows.forEach(function (r, i) { var a = r.q * r.r; sub += a; if (amts[i]) amts[i].textContent = "Amount: " + inr(a); });
+    var g = parseFloat($("iGst").value) || 0, ga = Math.round(sub * g) / 100, disc = parseFloat($("iDisc").value) || 0;
+    var tot = Math.max(0, sub + ga - disc);
+    $("tSub").textContent = inr(sub); $("tGl").textContent = "GST" + (g ? " (" + g + "%)" : ""); $("tGst").textContent = inr(ga); $("tDisc").textContent = inr(disc); $("tTot").textContent = inr(tot);
+    return { sub: sub, gst: g, gstAmt: ga, disc: disc, total: tot };
+  }
+  ["iGst", "iDisc"].forEach(function (i) { $(i).oninput = calc; });
+  function resetForm() {
+    editNo = null; rows = []; $("formTitle").textContent = "New invoice"; $("savePdf").textContent = "Save & Create PDF";
+    $("iNo").value = set.next; $("iDate").value = today(); ["cPhone", "cName", "vName", "vNo", "vKm", "iDisc"].forEach(function (i) { $(i).value = ""; });
+    $("iGst").value = set.gst || ""; $("iRem").value = set.rem || ""; renderRows(); calc();
+  }
+  $("clearForm").onclick = function () { if (confirm("Clear this form?")) resetForm(); };
+
+  function record() {
+    var t = calc(), items = rows.filter(function (r) { return r.d.trim() || r.r; }).map(function (r) { return { d: r.d.trim() || "-", q: r.q, r: r.r }; });
+    return { no: $("iNo").value.trim(), date: $("iDate").value || today(), phone: $("cPhone").value.trim(), cust: $("cName").value.trim(), veh: $("vName").value.trim(), vno: $("vNo").value.trim().toUpperCase(), km: $("vKm").value.trim(), items: items, gst: t.gst, gstAmt: t.gstAmt, disc: t.disc, sub: t.sub, total: t.total, rem: $("iRem").value.trim(), ts: Date.now() };
+  }
+  function saveRec() {
+    var r = record();
+    if (!r.no) { toast("Enter the invoice number."); return null; }
+    if (!r.items.length) { toast("Add at least one service."); return null; }
+    var i = inv.findIndex(function (x) { return x.no === r.no; });
+    if (i >= 0 && editNo !== r.no) { toast("Invoice number " + r.no + " is already used."); return null; }
+    if (editNo !== null) { var j = inv.findIndex(function (x) { return x.no === editNo; }); if (j >= 0) inv.splice(j, 1); }
+    inv.push(r); save("im_inv", inv);
+    var n = parseInt(r.no, 10); if (!isNaN(n) && n >= set.next) { set.next = n + 1; save("im_set", set); }
+    return r;
+  }
+  function pdfOf(r) { return window.buildInvoicePDF(window.jspdf.jsPDF, r, window.LOGO); }
+  function deliver(r) {
+    var doc = pdfOf(r), name = "Intech-Invoice-" + r.no + ".pdf";
+    try {
+      var file = new File([doc.output("blob")], name, { type: "application/pdf" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file], title: "Invoice " + r.no }).catch(function () {}); return; }
+    } catch (e) {}
+    doc.save(name);
+  }
+  $("saveOnly").onclick = function () { var r = saveRec(); if (r) { toast("Invoice " + r.no + " saved."); resetForm(); } };
+  $("savePdf").onclick = function () { var r = saveRec(); if (r) { deliver(r); toast("Invoice " + r.no + " saved."); resetForm(); } };
+
+  /* ---------------- history ---------------- */
+  function waText(r) {
+    var t = "*INTECH MOTORS* - Invoice " + r.no + "\nDate: " + r.date + "\n";
+    if (r.veh || r.vno) t += "Vehicle: " + r.veh + " " + r.vno + "\n";
+    t += "\n"; r.items.forEach(function (i) { t += "- " + i.d + (i.q !== 1 ? " x" + i.q : "") + " : " + inr(i.q * i.r) + "\n"; });
+    t += "\nTotal: *" + inr(r.total) + "*\n\nThank you! Drive Safe, Stay Safe.";
+    return t;
+  }
+  function renderHist() {
+    var q = $("search").value.trim().toLowerCase(), box = $("hist"); box.innerHTML = "";
+    var ym = today().slice(0, 7), mt = 0, mc = 0;
+    inv.forEach(function (r) { if (r.date.slice(0, 7) === ym) { mt += r.total; mc++; } });
+    $("mTot").textContent = inr(mt); $("mCnt").textContent = mc;
+    var list = inv.slice().sort(function (a, b) { return b.ts - a.ts; }).filter(function (r) { return !q || [r.no, r.cust, r.phone, r.vno, r.veh].join(" ").toLowerCase().indexOf(q) >= 0; });
+    if (!list.length) { box.appendChild(el("p", "muted", inv.length ? "No matching invoices." : "No invoices yet. Create your first one in the New tab.")); return; }
+    list.forEach(function (r) {
+      var c = el("div", "hi"), top = el("div", "top"), l = el("div"), rt = el("div");
+      var b = el("b", "", "#" + r.no + "  " + (r.cust || r.veh || "Customer")); var s = el("small", "", r.date + (r.vno ? "  |  " + r.vno : "") + (r.phone ? "  |  " + r.phone : ""));
+      l.appendChild(b); l.appendChild(s); rt.appendChild(el("b", "", inr(r.total)));
+      top.appendChild(l); top.appendChild(rt); top.onclick = function () { c.classList.toggle("open"); };
+      var m = el("div", "more");
+      function btn(t, cls, fn) { var x = el("button", "btn sm " + cls, t); x.type = "button"; x.onclick = fn; m.appendChild(x); }
+      btn("PDF / Share", "", function () { deliver(r); });
+      btn("WhatsApp text", "out", function () { var ph = r.phone.replace(/\D/g, ""); if (ph.length === 10) ph = "91" + ph; window.open("https://wa.me/" + ph + "?text=" + encodeURIComponent(waText(r)), "_blank"); });
+      btn("Edit", "out", function () { edit(r); });
+      btn("Delete", "red", function () { if (confirm("Delete invoice " + r.no + "?")) { inv = inv.filter(function (x) { return x.no !== r.no; }); save("im_inv", inv); renderHist(); toast("Deleted."); } });
+      c.appendChild(top); c.appendChild(m); box.appendChild(c);
+    });
+  }
+  $("search").oninput = renderHist;
+  function edit(r) {
+    editNo = r.no; rows = r.items.map(function (i) { return { d: i.d, q: i.q, r: i.r }; });
+    $("iNo").value = r.no; $("iDate").value = r.date; $("cPhone").value = r.phone; $("cName").value = r.cust; $("vName").value = r.veh; $("vNo").value = r.vno; $("vKm").value = r.km;
+    $("iGst").value = r.gst || ""; $("iDisc").value = r.disc || ""; $("iRem").value = r.rem; $("formTitle").textContent = "Edit invoice " + r.no; $("savePdf").textContent = "Update & Create PDF";
+    renderRows(); calc(); document.querySelector('.tabs button[data-t="new"]').click();
+  }
+
+  /* ---------------- settings & backup ---------------- */
+  function fillSet() { $("sNext").value = set.next; $("sGst").value = set.gst || ""; $("sRem").value = set.rem || ""; $("sSvc").value = set.services; }
+  $("saveSet").onclick = function () {
+    set.next = parseInt($("sNext").value, 10) || set.next; set.gst = parseFloat($("sGst").value) || 0; set.rem = $("sRem").value; set.services = $("sSvc").value;
+    save("im_set", set); fillQuick(); if (editNo === null) resetForm(); toast("Settings saved.");
+  };
+  $("exp").onclick = function () {
+    var blob = new Blob([JSON.stringify({ app: "intech-billing", saved: new Date().toISOString(), set: set, inv: inv }, null, 1)], { type: "application/json" });
+    var a = el("a"); a.href = URL.createObjectURL(blob); a.download = "intech-backup-" + today() + ".json"; document.body.appendChild(a); a.click(); a.remove(); toast("Backup downloaded.");
+  };
+  $("impBtn").onclick = function () { $("imp").click(); };
+  $("imp").onchange = function () {
+    var f = this.files[0]; if (!f) return; var fr = new FileReader();
+    fr.onload = function () {
+      try {
+        var d = JSON.parse(fr.result); if (!d.inv || !Array.isArray(d.inv)) throw 0;
+        if (!confirm("Restore " + d.inv.length + " invoices from this backup? Invoices with the same number will be replaced.")) return;
+        d.inv.forEach(function (r) { inv = inv.filter(function (x) { return x.no !== r.no; }); inv.push(r); });
+        if (d.set) { set = d.set; save("im_set", set); }
+        save("im_inv", inv); fillSet(); fillQuick(); resetForm(); renderHist(); toast("Backup restored.");
+      } catch (e) { toast("That file is not a valid backup."); }
+    };
+    fr.readAsText(f); this.value = "";
+  };
+  $("chPin").onclick = function () { if (confirm("Change PIN? You will need to create a new one now.")) { localStorage.removeItem("im_pin"); showLock(); } };
+
+  var started = false;
+  function init() { if (started) { resetForm(); return; } started = true; fillQuick(); fillSet(); resetForm(); }
+
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function () {});
+  showLock();
+  window.__im = { inv: function () { return inv; } };
+})();
+</script>
+</body>
+</html>
