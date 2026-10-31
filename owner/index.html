@@ -184,6 +184,31 @@ main{max-width:640px;margin:0 auto;padding:16px}
     };
   });
 
+  /* ---------------- input limits ---------------- */
+  var CL = {
+    name: function (v) { return v.replace(/[^\p{L}\p{M} .'\-]/gu, "").replace(/\s{2,}/g, " ").slice(0, 40); },
+    phone: function (v) { var d = String(v).replace(/\D/g, ""); if (d.length > 10 && d.slice(0, 2) === "91") d = d.slice(-10); return d.slice(0, 10); },
+    veh: function (v) { return v.replace(/[^\p{L}\p{M}\p{N} .\-\/]/gu, "").replace(/\s{2,}/g, " ").slice(0, 30); },
+    vno: function (v) { return v.toUpperCase().replace(/[^A-Z0-9 \-]/g, "").replace(/\s{2,}/g, " ").slice(0, 13); },
+    km: function (v) { return v.replace(/\D/g, "").slice(0, 7); },
+    no: function (v) { return v.replace(/\D/g, "").slice(0, 6); }
+  };
+  function bindClean(id, fn, max) { var e = $(id); if (max) e.maxLength = max; e.addEventListener("input", function () { var n = fn(e.value); if (n !== e.value) e.value = n; }); }
+  bindClean("cName", CL.name, 40); bindClean("cPhone", CL.phone, 10); bindClean("vName", CL.veh, 30); bindClean("vNo", CL.vno, 13); bindClean("vKm", CL.km, 7); bindClean("iNo", CL.no, 6);
+  $("iRem").maxLength = 300; $("sRem").maxLength = 300; $("iGst").max = 28; $("iDisc").max = 9999999;
+  function bad(id, m) { toast(m); $(id).focus(); return false; }
+  function validForm(r) {
+    if (!/^\d{1,6}$/.test(r.no)) return bad("iNo", "Invoice number must be digits only.");
+    if (r.cust && r.cust.length < 2) return bad("cName", "Customer name is too short.");
+    if (r.phone && !/^[6-9]\d{9}$/.test(r.phone)) return bad("cPhone", "Customer No. must be a valid 10-digit mobile number.");
+    if (r.vno && !/^[A-Z0-9][A-Z0-9 \-]{4,12}$/.test(r.vno)) return bad("vNo", "Enter a valid vehicle number, e.g. TN 06 AC 1606.");
+    if (r.gst < 0 || r.gst > 28) return bad("iGst", "GST must be between 0 and 28 percent.");
+    if (r.disc < 0 || r.disc > r.sub + r.gstAmt) return bad("iDisc", "Discount cannot be more than the bill amount.");
+    for (var i = 0; i < r.items.length; i++) { var it = r.items[i]; if (!(it.q > 0) || it.q > 999) { toast("Check the quantity of item " + (i + 1) + "."); return false; } if (it.r < 0 || it.r > 999999) { toast("Check the rate of item " + (i + 1) + "."); return false; } }
+    if (!(r.total > 0)) { toast("The total amount must be more than zero."); return false; }
+    return true;
+  }
+
   /* ---------------- form ---------------- */
   function svcList() {
     return set.services.split("\n").map(function (l) { var p = l.split("|"); return { n: (p[0] || "").trim(), r: parseFloat(p[1]) || 0 }; }).filter(function (s) { return s.n; });
@@ -198,11 +223,11 @@ main{max-width:640px;margin:0 auto;padding:16px}
     var box = $("rows"); box.innerHTML = ""; amts = [];
     rows.forEach(function (r, i) {
       var w = el("div", "row");
-      var dw = el("div", "d"), dl = el("label", "", "Item " + (i + 1)), d = el("input"); d.value = r.d; d.placeholder = "Service / part"; d.oninput = function () { r.d = d.value; };
+      var dw = el("div", "d"), dl = el("label", "", "Item " + (i + 1)), d = el("input"); d.value = r.d; d.maxLength = 60; d.placeholder = "Service / part"; d.oninput = function () { r.d = d.value; };
       dw.appendChild(dl); dw.appendChild(d);
-      var qw = el("div"), ql = el("label", "", "Qty"), q = el("input"); q.type = "number"; q.min = 0; q.inputMode = "decimal"; q.value = r.q; q.oninput = function () { r.q = parseFloat(q.value) || 0; calc(); };
+      var qw = el("div"), ql = el("label", "", "Qty"), q = el("input"); q.type = "number"; q.min = 0; q.inputMode = "decimal"; q.value = r.q; q.max = 999; q.oninput = function () { r.q = Math.min(999, parseFloat(q.value) || 0); calc(); };
       qw.appendChild(ql); qw.appendChild(q);
-      var rw = el("div"), rl = el("label", "", "Rate (Rs.)"), rt = el("input"); rt.type = "number"; rt.min = 0; rt.inputMode = "decimal"; rt.value = r.r; rt.oninput = function () { r.r = parseFloat(rt.value) || 0; calc(); };
+      var rw = el("div"), rl = el("label", "", "Rate (Rs.)"), rt = el("input"); rt.type = "number"; rt.min = 0; rt.inputMode = "decimal"; rt.value = r.r; rt.max = 999999; rt.oninput = function () { r.r = Math.min(999999, parseFloat(rt.value) || 0); calc(); };
       rw.appendChild(rl); rw.appendChild(rt);
       var m = el("div", "m"), a = el("b", "", ""), x = el("button", "x", "Remove"); x.type = "button"; x.onclick = function () { rows.splice(i, 1); renderRows(); calc(); };
       amts.push(a); m.appendChild(a); m.appendChild(x);
@@ -232,6 +257,7 @@ main{max-width:640px;margin:0 auto;padding:16px}
     var r = record();
     if (!r.no) { toast("Enter the invoice number."); return null; }
     if (!r.items.length) { toast("Add at least one service."); return null; }
+    if (!validForm(r)) return null;
     var i = inv.findIndex(function (x) { return x.no === r.no; });
     if (i >= 0 && editNo !== r.no) { toast("Invoice number " + r.no + " is already used."); return null; }
     if (editNo !== null) { var j = inv.findIndex(function (x) { return x.no === editNo; }); if (j >= 0) inv.splice(j, 1); }

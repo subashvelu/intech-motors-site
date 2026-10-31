@@ -148,3 +148,7 @@ header.scrolled{box-shadow:0 10px 30px rgba(0,0,0,.55)}
 .stat strong{transition:.3s}.stat:hover strong{transform:scale(1.06)}
 @media(max-width:560px){.drive{width:110px}.road{height:84px}.prog .pc{width:36px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.drive{left:40%}.rv{opacity:1;transform:none}}
+/* ---------- form validation ---------- */
+.ferr{display:block;margin-top:4px;color:#ff8f80;font-size:.76rem;line-height:1.35}.ferr:empty{display:none}
+.cnt{display:block;text-align:right;color:var(--muted);font-size:.7rem;margin-top:2px}
+input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:#e0584a!important;outline-color:#e0584a}

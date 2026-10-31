@@ -1,18 +1,16 @@
 (function () {
-  var S = window.SERVICES || [], TYPES = window.CAR_TYPES || ["Hatchback", "Sedan", "SUV / MUV"];
-  var sel = {}, custom = [], logo = null, prs = [];
+  var S = window.SERVICES || [];
+  var sel = {}, custom = [], logo = null;
   var $ = function (i) { return document.getElementById(i); };
   var inr = function (n) { return "Rs. " + Number(n).toLocaleString("en-IN"); };
   if (!$("svcList")) return;
-  function tIdx() { return parseInt($("eType").value, 10) || 0; }
-  function rateOf(s) { return Array.isArray(s.rate) ? s.rate[tIdx()] : s.rate; }
 
   S.forEach(function (s, i) {
     var l = document.createElement("label"); l.className = "item";
     var c = document.createElement("input"); c.type = "checkbox";
     var box = document.createElement("span"); box.className = "meta";
     var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = s.name;
-    var pr = document.createElement("span"); pr.className = "pr"; prs.push(pr);
+    var pr = document.createElement("span"); pr.className = "pr"; pr.textContent = "Approx. " + inr(s.rate);
     box.appendChild(nm); box.appendChild(pr);
     var q = document.createElement("input"); q.type = "number"; q.min = 1; q.max = 20; q.value = 1;
     q.className = "qty"; q.setAttribute("aria-label", "Quantity for " + s.name);
@@ -27,12 +25,11 @@
 
   function items() {
     var out = [];
-    Object.keys(sel).sort(function (a, b) { return a - b; }).forEach(function (k) { out.push({ desc: S[k].name, qty: sel[k], rate: rateOf(S[k]) }); });
+    Object.keys(sel).sort(function (a, b) { return a - b; }).forEach(function (k) { out.push({ desc: S[k].name, qty: sel[k], rate: S[k].rate }); });
     custom.forEach(function (c) { out.push({ desc: c.desc, qty: 1, rate: c.amount }); });
     return out;
   }
   function update() {
-    prs.forEach(function (p, i) { p.textContent = "from " + inr(rateOf(S[i])); });
     var its = items(), total = 0, box = $("sumList"); box.innerHTML = "";
     if (!its.length) { var e = document.createElement("li"); e.className = "empty"; e.textContent = "No services selected yet."; box.appendChild(e); }
     its.forEach(function (it) {
@@ -42,7 +39,7 @@
     });
     $("sumTotal").textContent = inr(total);
   }
-  $("eType").addEventListener("change", update);
+  function msg(t) { $("eMsg").textContent = t; }
 
   function renderCustom() {
     var ul = $("cList"); ul.innerHTML = "";
@@ -54,11 +51,13 @@
       li.appendChild(s); li.appendChild(x); ul.appendChild(li);
     });
   }
+  $("cDesc").maxLength = 60; $("cAmt").max = 500000;
   $("cAdd").addEventListener("click", function () {
-    var d = $("cDesc").value.trim(), a = $("cAmt").value.trim();
-    if (!d) { $("cDesc").focus(); return; }
-    if (a === "" || isNaN(Number(a)) || Number(a) < 0) { $("cAmt").focus(); msg("Please enter the amount for the extra work."); return; }
-    msg(""); custom.push({ desc: d, amount: Number(a) });
+    var d = $("cDesc").value.replace(/\s{2,}/g, " ").trim(), a = $("cAmt").value.trim();
+    if (d.length < 3) { $("cDesc").focus(); msg("Describe the extra work (at least 3 letters)."); return; }
+    if (a === "" || isNaN(Number(a)) || Number(a) <= 0 || Number(a) > 500000) { $("cAmt").focus(); msg("Enter an amount between 1 and 5,00,000."); return; }
+    if (custom.length >= 10) { msg("You can add up to 10 extra works."); return; }
+    msg(""); custom.push({ desc: d, amount: Math.round(Number(a)) });
     $("cDesc").value = ""; $("cAmt").value = ""; renderCustom(); update();
   });
 
@@ -68,11 +67,16 @@
       no: "EST-" + String(n.getFullYear()).slice(2) + p(n.getMonth() + 1) + p(n.getDate()) + "-" + p(n.getHours()) + p(n.getMinutes()),
       date: n.getFullYear() + "-" + p(n.getMonth() + 1) + "-" + p(n.getDate()),
       customer: $("eName").value.trim(), phone: $("ePhone").value.trim(),
-      vehicle: $("eVeh").value.trim(), vehicleNo: $("eNo").value.trim().toUpperCase(), kms: $("eKm").value.trim(),
-      type: TYPES[tIdx()], remarks: $("eRem").value, items: items()
+      vehicle: $("eVeh").value.trim(), vehicleNo: $("eNo").value.trim(), kms: $("eKm").value.trim(),
+      remarks: $("eRem").value, items: items()
     };
   }
-  function msg(t) { $("eMsg").textContent = t; }
+  function ready() {
+    msg("");
+    if (!items().length) { msg("Please select at least one service."); return false; }
+    if (!window.IM.checkAll(["eName", "ePhone", "eVeh", "eNo", "eKm"])) { msg("Please correct the highlighted fields."); return false; }
+    return true;
+  }
   function loadLogo(cb) {
     if (logo) return cb(logo);
     fetch("assets/img/logo-pdf.jpg").then(function (r) { return r.blob(); }).then(function (b) {
@@ -80,8 +84,7 @@
     }).catch(function () { cb(null); });
   }
   $("eDl").addEventListener("click", function () {
-    var d = data(); msg("");
-    if (!d.items.length) { msg("Please select at least one service."); return; }
+    if (!ready()) return; var d = data();
     if (!window.jspdf || !window.buildEstimatePDF) { msg("PDF tool did not load. Please refresh and try again."); return; }
     loadLogo(function (lg) {
       try { window.buildEstimatePDF(window.jspdf.jsPDF, d, lg).save("Intech-Motors-" + d.no + ".pdf"); msg("Your estimate PDF is downloading."); }
@@ -89,13 +92,10 @@
     });
   });
   $("eWa").addEventListener("click", function () {
-    var d = data(); msg("");
-    if (!d.items.length) { msg("Please select at least one service."); return; }
-    var t = "Hello Intech Motors, I would like a service estimate.\n";
-    if (d.customer) t += "Name: " + d.customer + "\n";
-    if (d.phone) t += "Phone: " + d.phone + "\n";
-    t += "Vehicle: " + (d.vehicle || "-") + " " + d.vehicleNo + " (" + d.type + (d.kms ? ", " + d.kms + " km" : "") + ")\n\nServices:\n";
-    var tot = 0;
+    if (!ready()) return; var d = data();
+    var t = "Hello Intech Motors, I would like a service estimate.\nName: " + d.customer + "\nPhone: " + d.phone + "\n";
+    if (d.vehicle || d.vehicleNo) t += "Vehicle: " + d.vehicle + " " + d.vehicleNo + (d.kms ? " (" + d.kms + " km)" : "") + "\n";
+    t += "\nServices:\n"; var tot = 0;
     d.items.forEach(function (it) { t += "- " + it.desc + (it.qty > 1 ? " x" + it.qty : "") + " : " + inr(it.rate * it.qty) + "\n"; tot += it.rate * it.qty; });
     t += "\nApprox. total: " + inr(tot); if (d.remarks.trim()) t += "\nRemarks: " + d.remarks.trim();
     window.open("https://wa.me/919500165968?text=" + encodeURIComponent(t), "_blank");

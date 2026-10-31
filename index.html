@@ -26,7 +26,7 @@
 <p>Honest diagnosis, clear estimates and skilled repairs for every make of car. Visit Intech Motors in West Chitrakulam, Mylapore.</p>
 <div class="cta"><a class="btn" href="#estimate">Get an Estimate</a><a class="btn out" href="#contact">Book a Service</a></div>
 </div>
-<div class="emb"><div class="ring"></div><img src="assets/img/logo.png" alt="Intech Motors emblem"></div>
+<div class="emb"><div class="ring"></div><img src="assets/img/logo-hero.png" alt="Intech Motors emblem"></div>
 </div></div>
 
 <div class="wrap"><div class="stats">
@@ -61,7 +61,7 @@
 </div></div></section>
 
 <section id="estimate" class="alt"><div class="wrap">
-<div class="head"><div class="eyebrow">Instant Estimate</div><h2>Get your <span class="gold">service estimate</span></h2><p>Choose the services you need, add your car details and download a PDF estimate. Choose your car type to see approximate rates. The final amount is confirmed after inspection.</p></div>
+<div class="head"><div class="eyebrow">Instant Estimate</div><h2>Get your <span class="gold">service estimate</span></h2><p>Choose the services you need, add your details and download a PDF estimate. Rates are approximate and the final amount is confirmed after inspection.</p></div>
 <div class="est">
 <div class="est-left">
 <div class="svclist" id="svcList"></div>
@@ -72,12 +72,11 @@
 <aside class="est-right">
 <h3 class="gold">Your estimate</h3>
 <div class="egrid">
-<div class="full"><label for="eType">Car type</label><select id="eType"><option value="0">Hatchback</option><option value="1">Sedan</option><option value="2">SUV / MUV</option></select></div>
-<div><label for="eName">Name</label><input id="eName" autocomplete="name"></div>
-<div><label for="ePhone">Phone</label><input id="ePhone" type="tel" autocomplete="tel"></div>
+<div><label for="eName">Name</label><input id="eName" autocomplete="name" placeholder="Your full name"></div>
+<div><label for="ePhone">Phone</label><input id="ePhone" type="tel" placeholder="10-digit mobile number"></div>
 <div><label for="eVeh">Vehicle (make &amp; model)</label><input id="eVeh"></div>
-<div><label for="eNo">Vehicle number</label><input id="eNo"></div>
-<div class="full"><label for="eKm">KMs driven</label><input id="eKm" inputmode="numeric"></div>
+<div><label for="eNo">Vehicle number</label><input id="eNo" placeholder="TN 06 AC 1606" autocapitalize="characters"></div>
+<div class="full"><label for="eKm">KMs driven</label><input id="eKm" inputmode="numeric" placeholder="e.g. 21000"></div>
 </div>
 <ul id="sumList" class="sum"></ul>
 <div class="tot"><span>Estimated total</span><strong id="sumTotal">Rs. 0</strong></div>
@@ -125,6 +124,7 @@
 <footer><div class="wrap"><img src="assets/img/logo-sm.png" alt="Intech Motors"><span>© 2026 Intech Motors. All rights reserved. · Mylapore, Chennai</span></div></footer>
 <a class="fab" href="https://wa.me/919500165968">WhatsApp Us</a>
 <div id="lb"><img alt=""></div>
+<script src="assets/js/validate.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/jspdf.umd.min.js"></script>
 <script src="assets/js/services.js"></script>

@@ -37,10 +37,10 @@
 
     // ---------- vehicle box ----------
     doc.roundedRect(M, 57, W - 2 * M, 15, 2, 2);
-    [["Vehicle Name", d.vehicle], ["Vehicle Number", d.vehicleNo], ["KMs Driven", d.kms], ["Car Type", d.type]].forEach(function (c, i) {
-      var x = M + 5 + i * 45;
+    [["Vehicle Name", d.vehicle], ["Vehicle Number", d.vehicleNo], ["KMs Driven", d.kms]].forEach(function (c, i) {
+      var x = M + 5 + i * 60;
       doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); txt(gold); doc.text(c[0].toUpperCase(), x, 63);
-      doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(30); doc.text(String(c[1] || "-").slice(0, 20), x, 69);
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(30); doc.text(String(c[1] || "-").slice(0, 26), x, 69);
     });
 
     // ---------- table ----------
