@@ -1,93 +1,106 @@
-# Intech Motors website – AWS DevOps starter project
+<div align="center">
 
-A static website hosted on AWS and deployed automatically from GitHub.
+# 🔧 Intech Motors: Website on AWS with CI/CD
 
+**A real website and an offline billing app for a car workshop in Mylapore, Chennai.**
+Hosted on AWS S3 + CloudFront and deployed automatically from GitHub with no stored credentials.
+
+[![Live](https://img.shields.io/badge/LIVE-d166dz9n7bj9t4.cloudfront.net-d4a62a?style=for-the-badge&labelColor=0a0d11)](https://d166dz9n7bj9t4.cloudfront.net)
+![AWS](https://img.shields.io/badge/AWS-S3%20%7C%20CloudFront%20%7C%20IAM-232f3e?style=flat-square)
+![IaC](https://img.shields.io/badge/IaC-CloudFormation-d4a62a?style=flat-square)
+![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20%2B%20OIDC-2088ff?style=flat-square)
+
+</div>
+
+<!-- ADD SCREENSHOTS: save images in docs/ and un-comment these lines
+![Home page](docs/home.png)
+![Estimate PDF](docs/estimate-pdf.png)
+![Owner billing app](docs/owner-app.png)
+-->
+
+## ✨ What it does
+
+**Public website**
+- Gold-and-black responsive design, swipeable workshop gallery, animated hero
+- **Instant estimate tool:** customers pick services and download a PDF estimate (generated in the browser, nothing sent to a server)
+- Input validation: name, 10-digit mobile number, vehicle number, KMs, character limits
+- Booking form that opens a pre-filled WhatsApp message
+
+**Owner billing app (PWA, offline)**
+- Installable on the owner's phone, works with no internet
+- PIN lock, invoice numbering, GST and discount, PDF invoices in the shop's bill format
+- Invoice history, search, and backup / restore. All data stays on the phone
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+  Dev([Developer]) -->|git push to main| GH[GitHub repo]
+  GH --> GA[GitHub Actions]
+  GA -->|1. validate HTML| GA
+  GA -->|2. OIDC token| IAM[AWS IAM role]
+  IAM -->|temporary credentials| GA
+  GA -->|3. aws s3 sync| S3[(S3 bucket - private)]
+  GA -->|4. invalidate cache| CF[CloudFront]
+  S3 -->|Origin Access Control| CF
+  User([Visitor]) -->|HTTPS| CF
 ```
- You push code ─► GitHub ─► GitHub Actions ─► S3 (private) ─► CloudFront (HTTPS) ─► Visitors
-                              │  (OIDC login, no passwords/keys stored)
-                              └─ htmlhint check ─► s3 sync ─► cache invalidation
-```
 
-## What you will learn
-- **S3** (private bucket) and **CloudFront** (CDN + HTTPS) with Origin Access Control
-- **IAM**, least-privilege roles, and **OIDC** (GitHub logs in to AWS without access keys)
-- **Infrastructure as Code** with CloudFormation (`infra/template.yaml`)
-- **CI/CD** with GitHub Actions (`.github/workflows/deploy.yml`)
+## 🔐 Security decisions
 
-## Project files
-```
-index.html                      the website
-assets/css, assets/js, assets/img
-infra/template.yaml             all AWS resources (CloudFormation)
-.github/workflows/deploy.yml    CI/CD pipeline
-```
+| Decision | Why |
+|---|---|
+| **OIDC instead of AWS access keys** | GitHub gets short-lived credentials per run. No long-term keys in the repo or in secrets |
+| **Role limited to one repo and the `main` branch** | A fork or another branch cannot deploy |
+| **Private S3 bucket + CloudFront Origin Access Control** | Only CloudFront can read the files; the bucket is never public |
+| **Least-privilege IAM policy** | Can only list, put and delete in this bucket and invalidate this distribution |
+| **`.gitignore` for `*.csv` + GitHub push protection** | An accidental access-key file was blocked by GitHub secret scanning before it reached the repo |
+| **Owner app data stays on the device** | No customer data is stored on any server |
 
-## Step 1 – Put the code on GitHub
-1. Create a new **public or private** repo on github.com (example: `intech-motors-site`).
-2. In this folder:
-```bash
-git init
-git add .
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/YOUR-USERNAME/intech-motors-site.git
-git push -u origin main
-```
-(The first push will show a failed Action. That is normal, AWS is not set up yet.)
+## 🧩 Challenges and how I solved them
 
-## Step 2 – AWS account (free)
-1. Sign up at aws.amazon.com and choose the **Free plan**.
-   - New accounts get about $100 in credits (up to $200 after onboarding tasks). The Free plan lasts up to 6 months or until credits are used, then you must upgrade to the Paid plan or the account closes. Check the current rules on AWS's Free Tier page, they change.
-   - CloudFront has an always-free allowance (1 TB/month). This small site uses a tiny fraction of that.
-2. **Secure it first:** turn on MFA for the root user, then create a budget alert (Billing → Budgets → "Zero spend budget" or $1).
-3. Install the AWS CLI and run `aws configure` (use an IAM user or IAM Identity Center user, not the root user).
-
-## Step 3 – Create the AWS infrastructure
-```bash
-aws cloudformation deploy \
-  --template-file infra/template.yaml \
-  --stack-name intech-site \
-  --capabilities CAPABILITY_IAM \
-  --region ap-south-1 \
-  --parameter-overrides GitHubRepo=YOUR-USERNAME/intech-motors-site
-
-aws cloudformation describe-stacks --stack-name intech-site \
-  --region ap-south-1 --query "Stacks[0].Outputs" --output table
-```
-If it says the OIDC provider already exists, add `CreateOidcProvider=false` to `--parameter-overrides`.
-
-## Step 4 – Connect GitHub to AWS
-In your GitHub repo: **Settings → Secrets and variables → Actions**
-
-| Type | Name | Value (from the stack outputs) |
+| Problem | Cause | Fix |
 |---|---|---|
-| Secret | `AWS_ROLE_ARN` | DeployRoleArn |
-| Secret | `S3_BUCKET` | S3Bucket |
-| Secret | `CF_DISTRIBUTION_ID` | CloudFrontDistributionId |
-| Variable | `AWS_REGION` | `ap-south-1` |
+| CloudFormation failed on the CloudFront distribution | New AWS accounts must be verified for CloudFront | Opened an AWS Support case; approved, then redeployed |
+| `Not authorized to perform sts:AssumeRoleWithWebIdentity` | GitHub's OIDC `sub` claim now includes numeric IDs (`repo:owner@id/repo@id:ref:...`), so my trust policy did not match | Debugged by printing the token claims in a workflow, then allowed both claim formats in the role's trust policy |
+| Push rejected by GitHub | A downloaded access-key CSV was inside the project folder | Removed it from the commit, rotated the key, added `*.csv` to `.gitignore` |
+| Deploy silently stopped | The HTML check job failed after `index.html` was deleted | Restored the file; the pipeline's validate-before-deploy gate worked as designed |
 
-## Step 5 – Deploy
-Go to **Actions → Deploy website to AWS → Run workflow** (or just push any change to `main`).
-When it turns green, open the `WebsiteURL` output. It looks like `https://dxxxxxxxx.cloudfront.net`.
+## 🛠️ Tech stack
 
-From now on: **edit → git push → live in about a minute.**
+`AWS S3` · `CloudFront` · `IAM / OIDC` · `CloudFormation` · `GitHub Actions` · `HTML / CSS / JavaScript` · `jsPDF` · `Service Worker (PWA)` · `Cloudflare DNS`
 
-## Custom domain (optional, not free)
-A domain name always costs money (yearly fee from the registrar). Free options:
-- Use the `*.cloudfront.net` URL, or
-- Host on **GitHub Pages** for a free `username.github.io/...` address.
+## 📁 Project structure
 
-To use a paid domain with this setup: request a free certificate in **ACM in us-east-1**, add your domain as an alternate domain name (CNAME) on the CloudFront distribution, then point the domain's DNS to the CloudFront URL. Note: Route 53 hosted zones cost about $0.50/month and are not free-tier. You can use your registrar's DNS or Cloudflare instead.
-
-## Clean up (to avoid any charges)
-```bash
-aws s3 rm s3://YOUR-BUCKET-NAME --recursive
-aws cloudformation delete-stack --stack-name intech-site --region ap-south-1
+```
+├── index.html              public website
+├── assets/                 css, js (estimate tool, validation), images
+├── owner/                  offline billing PWA (not linked from the public site)
+├── infra/template.yaml     CloudFormation: S3, CloudFront, IAM role
+└── .github/workflows/      CI/CD pipeline
 ```
 
-## Next steps to level up
-1. Rewrite `infra/template.yaml` in **Terraform**.
-2. Add a **CloudWatch alarm / budget alert** via IaC.
-3. Add a staging site (separate stack, deploy from a `dev` branch).
-4. Add the custom domain + ACM certificate to the template.
-5. Add Lighthouse / link-check steps in the pipeline.
+## 🚀 Deploy your own copy
+
+1. Fork this repo and create the stack:
+   ```bash
+   aws cloudformation deploy --template-file infra/template.yaml \
+     --stack-name my-site --capabilities CAPABILITY_IAM \
+     --parameter-overrides GitHubRepo=YOUR-USER/YOUR-REPO
+   ```
+2. Put the stack outputs (role ARN, bucket, distribution ID) into `.github/workflows/deploy.yml`.
+3. Push to `main` and the workflow publishes the site.
+
+## 💰 Cost
+
+Runs inside the AWS Free Tier / free-plan credits. CloudFront has an always-free monthly allowance, and a site this small uses a tiny part of it.
+
+## 🗺️ Next improvements
+
+- [ ] Rewrite the infrastructure in Terraform
+- [ ] Add a free ACM certificate and a custom domain
+- [ ] Security scanning in the pipeline (Checkov, Trivy)
+- [ ] CloudWatch alarm for CloudFront errors
+
+---
+<sub>Built by [Subash V](https://github.com/subashvelu) for Intech Motors, Mylapore.</sub>
